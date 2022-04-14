@@ -136,7 +136,7 @@ Do{
    
    If( $monitoringResults.Count -gt 0 ){
       $dataTransferSpeed = [ Math ]::Floor( 
-         ( $monitoringResults[ $monitoringResults.Count - 1 ].dataLeftGB - $vSANResyncingStatus[ 0 ].TotalDataToSyncGB ) / 
+         ( $monitoringResults[ $monitoringResults.Count - 1 ]."Data Left(GB)" - $vSANResyncingStatus[ 0 ].TotalDataToSyncGB ) / 
          $intervalSeconds * 1024 
       )
    } Else{
