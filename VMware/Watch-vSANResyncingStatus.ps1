@@ -144,13 +144,13 @@ Do{
    }
 
    $monitoringResults.Add( [ PSCustomObject ]@{
-      "dateTime (24h)" = $dateTime
-      vSANCluster = $vSANResyncingStatus[ 0 ].Cluster
-      dataLeftGB = [ Math ]::Floor( $vSANResyncingStatus[ 0 ].TotalDataToSyncGB )
-      objectsLeft = $vSANResyncingStatus[ 0 ].TotalObjectsToSync
-      "ETA (hours)" = $vSANResyncingStatusETA
-      "ETA (minutes)" = $vSANResyncingStatus[ 0 ].TotalResyncingObjectRecoveryETAMinutes
-      "throughput( MiBps )" = $dataTransferSpeed
+      "Date Time (24h)" = $dateTime
+      "vSAN Cluster" = $vSANResyncingStatus[ 0 ].Cluster
+      "Data Left(GB)" = [ Math ]::Floor( $vSANResyncingStatus[ 0 ].TotalDataToSyncGB )
+      "Objects Left" = $vSANResyncingStatus[ 0 ].TotalObjectsToSync
+      "ETA (Hours)" = $vSANResyncingStatusETA
+      "ETA (Minutes)" = $vSANResyncingStatus[ 0 ].TotalResyncingObjectRecoveryETAMinutes
+      "Throughput (MiBps)" = $dataTransferSpeed
    } ) | Out-Null
 
    # Output vSAN resyncing status in a table format and in a continous way / "stream" rather than displaying a whole table after at each interval.
