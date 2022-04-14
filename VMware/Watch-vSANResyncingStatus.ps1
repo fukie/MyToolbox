@@ -56,7 +56,7 @@ System.String. Writes status of vSAN resyncing objects to console.
 #>
 
 # Load config file which shoud 
-& "$PSScriptRoot\VMware-Config.ps1"
+. "$PSScriptRoot\VMware-Config.ps1"
 
 Function Test-AndInstallPSModule( $moduleName ){
    Write-Host "[$( Get-Date -Format "yyyy-MM-dd HH:mm" )] Checking for module $moduleName..."
