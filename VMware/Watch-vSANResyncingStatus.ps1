@@ -141,7 +141,7 @@ Do{
 
    If( $vSANResyncingStatus[ 0 ].TotalDataToSyncGB -eq 0 ){
       Write-Host "[$( Get-Date -Format "yyyy-MM-dd HH:mm" )] No vSAN resyncing in progress."
-      Exit
+      Break
    }
    
    If( $monitoringResults.Count -gt 0 ){
@@ -174,5 +174,10 @@ Do{
    Start-Sleep -Seconds $intervalSeconds
 } While( $vSANResyncingStatus[ 0 ].TotalResyncingObjectRecoveryETAMinutes -gt 0 )
 
-Write-Host ""
-Write-Host "[$( Get-Date -Format "yyyy-MM-dd HH:mm" )] vSAN resyncing Completed."
+If( $monitoringResults.Count -gt 0 ){
+   Write-Host ""
+   Write-Host "[$( Get-Date -Format "yyyy-MM-dd HH:mm" )] vSAN resyncing Completed."
+}
+
+Write-Host "[$( Get-Date -Format "yyyy-MM-dd HH:mm" )] Disconnecting from $serverURL."
+Disconnect-VIServer -Server $serverConnection -Confirm:$false
