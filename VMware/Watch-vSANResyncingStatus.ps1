@@ -1,7 +1,8 @@
 <#
 .SYNOPSIS
 Script to check and watch a vSAN cluster's status for objects that are being resynced.
-The vSAN resyncing objects status will be checked at regular intervals until resyncing is completed. 
+The vSAN resyncing objects status will be checked at regular intervals until resyncing is completed.
+This helps to circumvent the timeout issue on the vSphere client while giving the ability to continously monitor, see the progress and estimate time to completion.
 
 .NOTES
 --- General ---
