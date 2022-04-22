@@ -105,7 +105,7 @@ Function Test-AndConfigureVMwareInvalidCertificates( [ Boolean ]$ignoreInvalidCe
 
 Function Connect-VMwareServer( $serverURL, $credentials ){
    Try{ 
-      Connect-VIServer -Server $serverURL -User $credentials.username -Password $credentials.password -ErrorAction Stop | Out-Null
+      $serverConnection = Connect-VIServer -Server $serverURL -User $credentials.username -Password $credentials.password -ErrorAction Stop
       Write-Host "[$( Get-Date -Format "yyyy-MM-dd HH:mm" )] Successful connection and authentication to $serverURL."
    } Catch [ VMware.VimAutomation.ViCore.Types.V1.ErrorHandling.InvalidLogin ]{
       Write-Host "[$( Get-Date -Format "yyyy-MM-dd HH:mm" )] Authentication failed to $serverURL."
@@ -117,17 +117,18 @@ Function Connect-VMwareServer( $serverURL, $credentials ){
       Write-Host "[$( Get-Date -Format "yyyy-MM-dd HH:mm" )] Unexpected error while connecting/authentication to $serverURL."
       Exit
    }
+   Return $serverConnection
 }
 
 Test-AndInstallPSModule -moduleName "VMware.PowerCLI"
 Test-AndConfigureVMwareInvalidCertificates -ignoreInvalidCertificates:$true
-Connect-VMwareServer -serverURL $serverURL -credentials $credentials
+$serverConnection = Connect-VMwareServer -serverURL $serverURL -credentials $credentials
 
 [ System.Collections.ArrayList ]$monitoringResults =  @()
 Do{
    $dateTime = Get-Date -Format "yyyy-MM-dd HH:mm"
    Try{
-      $vSANResyncingStatus = Get-VsanResyncingOverview -Cluster $clusterName -ErrorAction Stop
+      $vSANResyncingStatus = Get-VsanResyncingOverview -Server $serverConnection -Cluster $clusterName -ErrorAction Stop
    } Catch{
       If( $Error[ 0 ].CategoryInfo.Category -eq "ObjectNotFound" ){
          Write-Host "[$( Get-Date -Format "yyyy-MM-dd HH:mm" )] vSAN Cluster $clusterName not found. Please check. Script terminating."
@@ -174,4 +175,4 @@ Do{
 } While( $vSANResyncingStatus[ 0 ].TotalResyncingObjectRecoveryETAMinutes -gt 0 )
 
 Write-Host ""
-Write-Host "[$( Get-Date -Format "yyyy-MM-dd HH:mm" )] vSAN resyncing Completed"
+Write-Host "[$( Get-Date -Format "yyyy-MM-dd HH:mm" )] vSAN resyncing Completed."
