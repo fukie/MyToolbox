@@ -123,7 +123,7 @@ Do{
    }
    
    Write-Host "`n-------- Tasks As Of $( $dateTime.ToString( "dd MMMM yyyy HH:mm" ) ) hrs --------"
-   ( $tasksFormatted | Format-Table | Out-String ).TrimEnd()
+   ( $tasksFormatted | Sort-Object "Start Time" | Format-Table | Out-String ).TrimEnd()
    Start-Sleep -Seconds $intervalSeconds
 } While( $tasks.Count -gt 0 )
 
