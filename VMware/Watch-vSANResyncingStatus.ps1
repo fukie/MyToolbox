@@ -13,7 +13,7 @@ Version:       1.0
 Repository:    https://github.com/fukie/MyToolbox
 
 --- Parameters ---
-Create a config file with the following parameters
+Create a config file (VMware-Config.ps1) in the same folder as this script, with the following parameters
 $serverURL        - vCenter's IP address or resolvable domain name (without HTTP/HTTPS)
 $credentials      - Username and password. This will be stored in plaintext!
 $clusterName      - Name of vSAN cluster in the VMware datacenter.
