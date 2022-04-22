@@ -126,7 +126,16 @@ Connect-VMwareServer -serverURL $serverURL -credentials $credentials
 [ System.Collections.ArrayList ]$monitoringResults =  @()
 Do{
    $dateTime = Get-Date -Format "yyyy-MM-dd HH:mm"
-   $vSANResyncingStatus = Get-VsanResyncingOverview -Cluster $clusterName
+   Try{
+      $vSANResyncingStatus = Get-VsanResyncingOverview -Cluster $clusterName -ErrorAction Stop
+   } Catch{
+      If( $Error[ 0 ].CategoryInfo.Category -eq "ObjectNotFound" ){
+         Write-Host "[$( Get-Date -Format "yyyy-MM-dd HH:mm" )] vSAN Cluster $clusterName not found. Please check. Script terminating."
+      } Else{
+         Write-Host "[$( Get-Date -Format "yyyy-MM-dd HH:mm" )] An uncaught exception error has occured. Please check. Script terminating."
+      }
+      Exit
+   }
    $vSANResyncingStatusETA = [ String ][ Math ]::Round( $vSANResyncingStatus[ 0 ].TotalResyncingObjectRecoveryETAMinutes / 60, 2 )
 
    If( $vSANResyncingStatus[ 0 ].TotalDataToSyncGB -eq 0 ){
