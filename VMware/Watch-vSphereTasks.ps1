@@ -99,8 +99,20 @@ Do{
    }
 
    ForEach( $task In $tasks ){
-      $vm = Get-VM $task.ExtensionData.Info.EntityName -Server $serverConnection
-      $cluster = $vm | Get-Cluster -Server $serverConnection
+      <# ### Entity Types
+         Cluster           - ClusterComputeResource
+         vSphere Hosts     - HostSystem-host
+         Virtual Machine   - VirtualMachine-vm
+      #> 
+
+      # Get cluster name if entity type is of VMs.
+      If( $task.ExtensionData.Info.Entity -Like "VirtualMachine-vm*" ){
+         $vm = Get-VM $task.ExtensionData.Info.EntityName -Server $serverConnection
+         $cluster = $vm | Get-Cluster -Server $serverConnection
+      } Else{
+         $cluster = "-"
+      }
+      
 
       $duration = New-TimeSpan -Start $task.ExtensionData.Info.StartTime.ToLocalTime() -End $dateTime
       If( $duration.Days -gt 0 ){
@@ -114,7 +126,7 @@ Do{
       }
       $tasksFormatted.Add( [ PSCustomObject ]@{
          "Cluster" = $cluster.Name
-         "VM Name" = $task.ExtensionData.Info.EntityName
+         "Resource" = $task.ExtensionData.Info.EntityName
          "Description" = $task.Description
          "Progress" = $task.PercentComplete.ToString() + " %"
          "Start Time" = $task.StartTime
